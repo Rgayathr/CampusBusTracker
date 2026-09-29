@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart AI Bus Monitoring & Arrival Prediction Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Leaflet Interactive Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="logo-icon">
+          <i class="fa-solid fa-bus-simple"></i>
+        </div>
+        <div class="brand-text">
+          <h1>CampusBus<span>Tracker</span> <span class="ai-badge">Enterprise AI</span></h1>
+          <p>Multi-Role Public & Campus Transit Monitoring Platform</p>
+        </div>
+      </div>
+      
+      <div class="nav-controls">
+        <div class="live-indicator">
+          <span class="pulse-dot"></span>
+          <span class="live-text">LIVE FLEET ACTIVE</span>
+        </div>
+        <button id="simModalBtn" class="btn btn-primary">
+          <i class="fa-solid fa-qrcode"></i> Checkpoint Simulator
+        </button>
+      </div>
+    </header>
+
+    <!-- Role Selection Tabs Bar -->
+    <section class="role-selector-bar glass">
+      <button class="role-btn active" data-role="student">
+        <i class="fa-solid fa-graduation-cap"></i> Student Portal
+      </button>
+      <button class="role-btn" data-role="parent">
+        <i class="fa-solid fa-users-between-lines"></i> Parent Safety Portal
+      </button>
+      <button class="role-btn" data-role="driver">
+        <i class="fa-solid fa-id-card"></i> Driver Console
+      </button>
+      <button class="role-btn" data-role="management">
+        <i class="fa-solid fa-chart-line"></i> Management Analytics
+      </button>
+    </section>
+
+    <!-- Interactive Polyline Map Container -->
+    <section class="map-section glass" style="padding: 16px; margin-bottom: 20px;">
+      <div class="section-header" style="margin-bottom: 12px;">
+        <h3><i class="fa-solid fa-map"></i> Interactive Polyline Route Map & Estimated Bus Movement</h3>
+        <span class="badge-hybrid"><i class="fa-solid fa-layer-group"></i> Real-time Interpolation</span>
+      </div>
+      <div id="interactiveMap" style="height: 320px; width: 100%; border-radius: 14px; border: 1px solid var(--glass-border); z-index: 1;"></div>
+    </section>
+
+    <!-- Visual Interactive Route Timeline Stepper -->
+    <section class="stepper-section glass" id="routeStepperBlock">
+      <div class="stepper-header">
+        <h3><i class="fa-solid fa-map-location-dot"></i> Live Route Progress & Active Stops</h3>
+        <span class="badge-hybrid"><i class="fa-solid fa-shield-halved"></i> GPS-Free Checkpoint Architecture</span>
+      </div>
+
+      <div class="route-stepper">
+        <div class="step-node active" id="node-1">
+          <div class="node-circle"><i class="fa-solid fa-qrcode"></i></div>
+          <span class="node-title">Main Gate</span>
+          <span class="node-tag physical">QR Tag</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node" id="node-2">
+          <div class="node-circle"><i class="fa-solid fa-building-columns"></i></div>
+          <span class="node-title">City Market</span>
+          <span class="node-tag virtual">Virtual Stop</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node active-bus" id="node-3">
+          <div class="node-circle"><i class="fa-solid fa-flask"></i></div>
+          <span class="node-title">Science Block</span>
+          <span class="node-tag physical">QR Tag</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node" id="node-4">
+          <div class="node-circle"><i class="fa-solid fa-traffic-light"></i></div>
+          <span class="node-title">City Junction</span>
+          <span class="node-tag virtual">Virtual Stop</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step-node" id="node-5">
+          <div class="node-circle"><i class="fa-solid fa-flag-checkered"></i></div>
+          <span class="node-title">Sports Complex</span>
+          <span class="node-tag physical">QR Tag</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content Dynamic Role Views -->
+    <main class="dashboard">
+
+      <!-- ROLE 1: STUDENT VIEW -->
+      <div id="view-student" class="role-view-block">
+        <section class="metrics-grid">
+          <div class="metric-card glass">
+            <div class="metric-icon blue"><i class="fa-solid fa-bus"></i></div>
+            <div class="metric-info">
+              <span class="label">Active Campus Buses</span>
+              <h3>3 Buses</h3>
+              <span class="subtext">BUS-01, BUS-02, BUS-03</span>
+            </div>
+          </div>
+          <div class="metric-card glass">
+            <div class="metric-icon purple"><i class="fa-solid fa-clock"></i></div>
+            <div class="metric-info">
+              <span class="label">Next Campus Arrival</span>
+              <h3>~3 Mins</h3>
+              <span class="subtext">Science Block Stop</span>
+            </div>
+          </div>
+          <div class="metric-card glass">
+            <div class="metric-icon emerald"><i class="fa-solid fa-brain"></i></div>
+            <div class="metric-info">
+              <span class="label">AI Arrival Engine</span>
+              <h3>98.4% Accuracy</h3>
+              <span class="subtext">ML Checkpoint Predictor</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="search-bar-row" style="margin: 20px 0;">
+          <div class="search-box glass">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search bus code (e.g. BUS-01) or checkpoint name...">
+          </div>
+        </div>
+
+        <section class="buses-section">
+          <div class="section-header">
+            <h2><i class="fa-solid fa-route"></i> Live Student Bus Radar & AI Predictions</h2>
+            <span class="timestamp" id="lastUpdatedClock">Updated just now</span>
+          </div>
+          <div id="busGrid" class="bus-cards-grid">
+            <!-- Dynamic Bus Cards -->
+          </div>
+        </section>
+      </div>
+
+      <!-- ROLE 2: PARENT VIEW -->
+      <div id="view-parent" class="role-view-block hidden">
+        <section class="parent-safety-card glass">
+          <div class="parent-header">
+            <div class="parent-avatar"><i class="fa-solid fa-user-shield"></i></div>
+            <div>
+              <h2>Parent Safety Monitoring Portal</h2>
+              <p>Tracked Student: <strong>Alex Smith (Roll No: 24CS0254)</strong></p>
+            </div>
+          </div>
+
+          <div class="status-banner success">
+            <i class="fa-solid fa-circle-check"></i> Student Assigned Bus (BUS-01) is Operating Safely On-Time
+          </div>
+
+          <div class="parent-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 20px;">
+            <div class="info-box glass" style="padding: 16px;">
+              <span style="color: var(--text-muted); font-size: 13px;">Assigned Route</span>
+              <h4 style="font-size: 18px; margin-top: 4px;">Route A: City Market $\rightarrow$ Campus Terminal</h4>
+            </div>
+            <div class="info-box glass" style="padding: 16px;">
+              <span style="color: var(--text-muted); font-size: 13px;">Latest Checkpoint Verified</span>
+              <h4 style="font-size: 18px; margin-top: 4px; color: var(--emerald);">Science Block Auditorium (09:12 AM)</h4>
+            </div>
+            <div class="info-box glass" style="padding: 16px;">
+              <span style="color: var(--text-muted); font-size: 13px;">Estimated Arrival Home</span>
+              <h4 style="font-size: 18px; margin-top: 4px; color: var(--accent);">05:15 PM (~On Schedule)</h4>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ROLE 3: DRIVER VIEW -->
+      <div id="view-driver" class="role-view-block hidden">
+        <section class="driver-console glass" style="padding: 24px;">
+          <h2><i class="fa-solid fa-id-card"></i> Driver Operations Console</h2>
+          <p style="color: var(--text-muted); margin-bottom: 20px;">Submit physical QR scans or city virtual checkpoint arrivals.</p>
+          
+          <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <button class="btn btn-primary" id="driverSimQrBtn"><i class="fa-solid fa-qrcode"></i> Scan Physical QR Tag</button>
+            <button class="btn btn-secondary" id="driverSimCityBtn"><i class="fa-solid fa-building-columns"></i> Check-in City Virtual Stop</button>
+            <button class="btn btn-secondary" style="background: rgba(245, 158, 11, 0.2); color: var(--amber);" onclick="alert('Traffic Delay Alert Broadcasted to Students & Parents!')"><i class="fa-solid fa-triangle-exclamation"></i> Report Traffic Delay</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- ROLE 4: MANAGEMENT VIEW -->
+      <div id="view-management" class="role-view-block hidden">
+        <section class="metrics-grid">
+          <div class="metric-card glass">
+            <div class="metric-icon blue"><i class="fa-solid fa-chart-pie"></i></div>
+            <div class="metric-info">
+              <span class="label">Fleet On-Time Performance</span>
+              <h3 style="color: var(--emerald);">96.8%</h3>
+              <span class="subtext">+2.4% from last week</span>
+            </div>
+          </div>
+          <div class="metric-card glass">
+            <div class="metric-icon purple"><i class="fa-solid fa-route"></i></div>
+            <div class="metric-info">
+              <span class="label">Total Checkpoints Today</span>
+              <h3>142 Scans</h3>
+              <span class="subtext">Zero hardware failures</span>
+            </div>
+          </div>
+          <div class="metric-card glass">
+            <div class="metric-icon emerald"><i class="fa-solid fa-gas-pump"></i></div>
+            <div class="metric-info">
+              <span class="label">Hardware Cost Savings</span>
+              <h3 style="color: var(--accent);">$0.00 / Bus</h3>
+              <span class="subtext">100% GPS-Free Software System</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </main>
+
+    <!-- Simulation Checkpoint Modal -->
+    <div id="simModal" class="modal-backdrop hidden">
+      <div class="modal-card glass">
+        <div class="modal-header">
+          <h3><i class="fa-solid fa-location-crosshairs"></i> Checkpoint Scan Simulator</h3>
+          <button id="closeModalBtn" class="close-btn">&times;</button>
+        </div>
+        <form id="simForm">
+          <div class="form-group">
+            <label for="simBusCode">Bus Code</label>
+            <input type="text" id="simBusCode" placeholder="e.g. BUS-01" value="BUS-01" required>
+          </div>
+          <div class="form-group">
+            <label for="simCheckpoint">Select Physical or City Virtual Stop</label>
+            <select id="simCheckpoint" required>
+              <optgroup label="Physical Campus QR Tags">
+                <option value="Main Gate Entrance">Stop 1: Main Gate Entrance (Physical QR)</option>
+                <option value="Science Block Auditorium">Stop 3: Science Block Auditorium (Physical QR)</option>
+                <option value="Sports Complex Terminal">Stop 5: Sports Complex Terminal (Physical QR)</option>
+              </optgroup>
+              <optgroup label="City Public Virtual Checkpoints">
+                <option value="CITY-STOP-101: City Market Circle">Stop 2: City Market Circle (Virtual Stop)</option>
+                <option value="CITY-STOP-102: Central Railway Junction">Stop 4: Central Railway Junction (Virtual Stop)</option>
+              </optgroup>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-success full-width">
+            <i class="fa-solid fa-paper-plane"></i> Submit Checkpoint Check-in
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Smart AI-Based Bus Monitoring & Arrival Prediction Platform &bull; Multi-Role Enterprise Architecture</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

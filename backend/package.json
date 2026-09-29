@@ -1,0 +1,9 @@
+{
+  "name": "campus-bus-tracker-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Backend API for CampusBusTracker Android app (QR/NFC checkpoint scans + status)",
+  "dependencies": {
+    "@vercel/kv": "^2.0.0"
+  }
+}

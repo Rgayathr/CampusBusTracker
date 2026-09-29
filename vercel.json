@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "routes": [
+    { "src": "/api/scan", "dest": "/api/scan.js" },
+    { "src": "/api/status", "dest": "/api/status.js" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/public/index.html" }
+  ]
+}
